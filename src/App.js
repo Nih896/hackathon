@@ -7,6 +7,7 @@ import './App.css';
 import Checkbox from './Checkbox.svg'
 import Select from 'react-select';
 
+
  const options = [
   { value: 'america', label: 'USD' },
   { value: 'england', label: 'GBP' },
@@ -74,6 +75,9 @@ function App() {
       </main>
     </div>
   );
+
+  //***************************************************************** */
+  
 }
 
 export default App;
