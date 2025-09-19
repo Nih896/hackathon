@@ -8,6 +8,8 @@ import EventCreatePage from './EventCreatePage';
 //import db from "./firebase";
 //import { doc, collection, getDocs, onSnapshot, addDoc } from "firebase/firestore"; 
 
+
+
 function App() {
   /*const [posts, setPosts] = useState([]);
   const [title, setTitle] = useState("");  // 入力用 state
@@ -22,6 +24,9 @@ function App() {
       </Routes>
     </div>
   );
+
+  //***************************************************************** */
+  
 }
 
 export default App;
