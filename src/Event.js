@@ -1,14 +1,22 @@
+
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
-/*function Event() {
+function Event() {
 
     const { eventId } = useParams();
     const [items, setItems] = useState([]);
     const [title, setTitle] = useState("");
     const [price, setPrice] = useState("");
 
-    useEffect(() => {
+    return(
+
+    <div><h1>こんにちは</h1>
+<p>イベントID: {eventId}</p>
+</div>
+)
+
+    /*useEffect(() => {
         //データベースからデータ取得する.
         const postData = collection(db, "posts");
         //初回データ取得
@@ -30,6 +38,8 @@ import { useParams } from "react-router-dom";
         setTitle(title);
         setText(text);
         }
-    }, []);
+    }, []);*/    
 
-    }*/
+    }
+
+    export default Event;
