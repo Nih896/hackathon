@@ -1,6 +1,7 @@
 /*rootファイル*/
 
 import './App.css';
+import Header from "./Header";
 import { Routes, Route, Link } from 'react-router-dom';
 import Event from './Event';
 import EventCreatePage from './EventCreatePage';
@@ -18,12 +19,15 @@ function App() {
 
 
   return (
-    <div className="App">
+    <div className='App'>
+      <Header />
+      <div>
         <Routes>
-        <Route path="/EventCreatePage" element={<EventCreatePage />} />
-        <Route path="/Event" element={<Event />} />
-        <Route path="/subevent" element={<SubEventFormPage />} />
-      </Routes>
+          <Route path="/EventCreatePage" element={<EventCreatePage />} />
+          <Route path="/event/:id" element={<Event />} />
+          <Route path="/subevent" element={<SubEventFormPage />} />
+        </Routes>
+      </div>
     </div>
   );
 

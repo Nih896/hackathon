@@ -61,19 +61,109 @@
 }
 
 .App-input {
-  border-radius:5px;
+  border-radius:10px;
   background: #F0F4F8;
   border:1px solid #97B1CC;
-  height: 30px;
-  width: 90%;
+  height: 35px;
+  width: 97%;
+  padding-left: 8px;
 }
-
-.APP-selesct {
-  width: 90%;
+.App-input:focus { /*選択したときの枠の色*/
+  outline: none;                /* ← デフォルトの青枠を消す */
+  border: 1px solid #15ADFF;    /* ← 枠線の色を変更 */
 }
 
 .App-form {
-  display: flex;  
+  display: flex;
+}
+
+.member-container {
+  border: 1px solid #97B1CC;
+  border-radius: 8px;
+  background: #F0F4F8;
+  padding: 0;
+  overflow: hidden; /* 内側の枠線を綺麗に見せる */
+  width: 98%;
+}
+
+.member-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.member-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  border-bottom: 1px solid #97B1CC; /* 区切り線 */
+}
+
+.member-item:last-child {
+  border-bottom: none; /* 最後は線を消す */
+}
+
+.member-name {
+  margin-right: 8px;
+}
+
+.remove-btn {
+  background: transparent;
+  border: none;
+  color: #555;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.member-input {
+  width: 100%;
+  border: none;
+  background: #F0F4F8;
+}
+.member-input:focus { /*選択したときの枠の色*/
+  outline: none;                /* ← デフォルトの青枠を消す */
+  border: none;    /* ← 枠線の色を変更 */
+}
+
+.member-form {
+  padding: 0;
+  border-top: 1px solid #97B1CC;
+  display: flex;
+  flex-direction: column;
+}
+
+.member-input-row,
+.member-button-row {
+  padding: 8px 12px;
+  border-bottom: 1px solid #97B1CC;
+}
+
+.member-button-row {
+  border-bottom: none; /* 最後の行は線を消す */
+}
+
+.member-btn {
+  background: transparent;
+  padding-left: 0;
+  border: none;
+  color: #15ADFF;
+  font-size: 14px;
+}
+
+.button-wrapper {
+  text-align: right;
+}
+
+.create-btn {
+  border-radius:6px;
+  background: #60C8FF;
+  border: none;
+  color: #FFFFFF;
+  font-size: 14px;
+  padding: 10px 15px;
+  margin: 10px 10px;
 }
 
 

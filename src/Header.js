@@ -1,3 +1,5 @@
+/*ヘッダー*/
+
 import './App.css';
 import Checkbox from './Checkbox.svg'
 
