@@ -1,0 +1,47 @@
+.Event-main {
+  padding-left: 20px;
+  padding-right: 20px;
+  height: 100vh;
+}
+
+.Event-name {
+    display: flex;
+    justify-content: space-between;
+}
+
+.Event-share {
+    margin-top: 10px;
+    border-radius:6px;
+    background: #FDDC70;
+    border: none;
+    color: #FFFFFF;
+    font-size: 14px;
+    padding: 10px 15px;
+    margin: 10px 10px;
+}
+
+.Share {
+    color: #FFFFFF;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0,0,0,0.4); /* 半透明の黒 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  width: 80%;       /* 画面より少し小さめ */
+  max-width: 500px; /* 最大幅 */
+  box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+}
