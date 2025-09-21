@@ -105,6 +105,7 @@ function EventDetail({ id }) {
   const handleNext = () => {
     setCurrentIndex((prev) => (prev < subevents.length - 1 ? prev + 1 : 0));
   };
+  
 
   return (
     
@@ -184,9 +185,11 @@ function EventDetail({ id }) {
           {isModalOpen && (
         <SubEventModal
           subevent={subevents[currentIndex]}
+          eventId={id}
           onClose={handleCloseModal}
           onPrev={handlePrev}
           onNext={handleNext}
+          
         />
       )}
 
