@@ -19,15 +19,19 @@ function Income({ subevent }) {
       return receiver ? receiver.name : subevent.receiverId; 
     })()}</p>
             <p>{subevent.amount}</p>
-        </div>
+        </div >
         <h2 className="Modal-h2">内訳</h2>
 
-        {subevent.members.map((member) => (
-        <div key={member.id} className="member-row">
-      <span className="member-name">{member.name}</span>
-      <span className="member-amount">{member.shareAmount}円</span>
-    </div>
-  ))}
+        <div className="Modal-box">
+
+              {subevent.members.map((member) => (
+              <div className="Modal"
+                key={member.id}>
+            <p className="member-name">{member.name}</p>
+            <p className="member-amount">{member.shareAmount}円</p>
+          </div>
+        ))}
+        </div>
 
 </div>
   );

@@ -11,14 +11,41 @@
 .Modal-cost {
   display: flex;
   justify-content: space-between; /* 左右に配置 */
-  justify-items: center;
-  border: none; /*境界線の指定*/
+  align-items: center; /* center揃え */
+  border: none;
   background: #F4F9FF;
-  border-radius:10px;
-  margin-top: 8px;
-  margin-bottom: 8px;
-  margin-left: 0;
-  padding: 0px 10px;
+  border-radius: 10px;
+  margin: 8px 0 8px 0;
+  padding: 0 10px;
+}
+
+.Modal-cost2 {
+  display: flex;
+  justify-content: space-between; /* 左右に配置 */
+}
+
+.Modal-box {
+  background-color: #165cb3;
+  padding: 10px;
+}
+
+.member-name {
+  font-size: 16px;
+  padding-right: 75%;
+
+}
+
+.member-amount {
+  font-size: 16px;
+}
+
+.Modal-cost2 {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: none;
+  background: #165cb3;
+  border-radius: 10px;
 }
 
 .Modal-btn-position {
@@ -27,11 +54,11 @@
 }
 
 .Modal-btn2 {
-  border-radius:10px;
+  border-radius: 10px;
   background: #60C8FF;
   border: none;
   color: #FFFFFF;
   font-size: 14px;
   padding: 7px 15px;
-  margin: 0px 0px 0px 10px;
+  margin-left: 10px;
 }

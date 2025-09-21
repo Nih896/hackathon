@@ -2,7 +2,17 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import db from "./firebase";
-import { doc, getDoc, collection, getDocs, onSnapshot } from "firebase/firestore";
+import {
+  collection,
+  addDoc,
+  updateDoc,
+  doc,
+  getDoc,
+  onSnapshot,
+  serverTimestamp,
+  query,
+  orderBy,
+} from "firebase/firestore";
 import './App.css';
 import './Event.css';
 
@@ -16,7 +26,11 @@ import EditIcon from './Edit_Icon.svg'
 import Token from './Token'; // パスは適切に修正してください
 
 import { useNavigate } from "react-router-dom";
-import EventEditPage from './EventEditPage'
+import EventEditPage from './EventEditPage';
+import Modal from "./components/Modal";
+
+import { SubEventDb } from "./firebase";
+
 
 function Event() {
 
@@ -30,6 +44,8 @@ function Event() {
 
 
     const [activeTab, setActiveTab] = useState("summary"); // ← "summary" or "detail"
+
+    const [editing, setEditing] = useState(null);
 
     const openModal = () => setIsModalOpen(true);
     const closeModal = () => setIsModalOpen(false);
@@ -85,6 +101,37 @@ function Event() {
       }
     };
 
+    // 新規追加
+      const handleAdd = async (formData) => {
+        try {
+          await addDoc(collection(SubEventDb, "events", id, "SubEvents"), {
+            ...formData,
+            createdAt: serverTimestamp(),
+            updatedAt: serverTimestamp(),
+          });
+          setIsModalOpen(false);
+        } catch (err) {
+          console.error("保存失敗:", err);
+          alert("保存に失敗しました");
+        }
+      };
+    
+      // 編集更新
+      const handleUpdate = async (SubEventId, formData) => {
+        try {
+          const docRef = doc(SubEventDb, "events", id, "SubEvents", SubEventId);
+          await updateDoc(docRef, {
+            ...formData,
+            updatedAt: serverTimestamp(),
+          });
+          setEditing(null);
+          setIsModalOpen(false);
+        } catch (err) {
+          console.error("更新失敗:", err);
+          alert("更新に失敗しました");
+        }
+      };
+
   return(    
 
         <div className="Event-main">
@@ -96,26 +143,28 @@ function Event() {
                 </h1>
                 <div>
                     <button className="Event-share" onClick={() => navigate(`/event/${id}/edit`)}>
-  <img src={EditIcon} className="Event-logo-Edit" alt="編集" />
-</button>
+                  <img src={EditIcon} className="Event-logo-Edit" alt="編集" />
+                </button>
                     <button className="Event-share"
                       onClick={handleShareClick}>
                       <img src={EditIcon} className="Event-logo-Share" alt="アイコンの説明" />
                     </button>
-                    <button className="Event-btn" onClick={openModal}>＋出費を追加</button>
-                    {isModalOpen && (
-                        <div className="modal-overlay" onClick={closeModal}>
-                          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-                              <AddSubEventForm
-                                      members={dummyMembers}
-                                      onAdd={handleAddEvent}
-                                      isOpen={isModalOpen} // isModalOpenを渡す
-                                      onClose={handleCloseModal} // onClose関数を渡す
-                                    />                             
-                              
-                          </div>
-                        </div>
-                    )}
+                    <button className="Event-btn" onClick={() => { setEditing(null); setIsModalOpen(true); }}>＋出費を追加</button>
+                    {/* モーダル内フォーム */}
+      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+        {/* <h2>{editing ? "イベントを編集" : "イベントを追加"}</h2> */}
+        <AddSubEventForm
+  members={events.members || []}  // ← Firestoreから取ってきたmembersをそのまま渡す
+  onAdd={(data) => {
+    if (editing && editing.id) {
+      return handleUpdate(editing.id, data);
+    } else {
+      return handleAdd(data);
+    }
+  }}
+  initialData={editing}
+/>
+      </Modal>
                 </div>
             </div>
 

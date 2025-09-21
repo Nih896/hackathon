@@ -9,23 +9,13 @@ export async function getSettlement(eventId) {
   const snapshot = await getDocs(
     collection(db, "events", eventId, "SubEvents")
   );
-
-  console.log("ドキュメント数:", snapshot.size);
 snapshot.forEach(doc => console.log(doc.id, doc.data()));
 
   const totals = {};
 
   snapshot.forEach((doc) => {
     const sub = doc.data();
-
-    console.log("sub doc:", sub);
-
     const members = sub.members;
-
-    console.log("members",members);
-
-    console.log("sub",sub)
-
     const type = sub.type;
     const amount = sub.amount;
 
@@ -75,10 +65,6 @@ snapshot.forEach(doc => console.log(doc.id, doc.data()));
       }
     }
   });
-
-
-
-console.log("totals:", totals);
 
   // creditors / debtors
   const creditors = [];
