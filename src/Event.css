@@ -54,6 +54,7 @@
   border-radius:6px;
   margin-top: 10px;
   margin-bottom: 10px;
+  padding: 10px 20px 20px 20px;
 }
 
 .Event-h2 {
@@ -61,7 +62,7 @@
   padding-top: 20px;
   padding-left: 20px;
   padding-bottom: 5px;
-  font-size: 20px;
+  font-size: 24px;
 }
 
 .Event-summary-h2 {
@@ -123,22 +124,46 @@
 }
 
 /*ditail*/
+.Detail-cost-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0 20px 6px 20px; /* 上下0、左右20pxのマージン */
+}
 
 .Detail-cost {
   display: flex;
-  justify-content: space-between; /* 左右に配置 */
-  justify-items: center;
-  border: none; /*境界線の指定*/
+  justify-content: space-between;
+  align-items: center; /* 垂直方向の中央揃えを追加 */
   background: #F4F9FF;
-  border-radius:10px;
-  margin: 10px 10px;
-  padding: 0px 10px;
+  border-radius: 10px;
+  margin: 10px 20px; /* 左右に20pxのマージンを設定 */
+  padding: 5px 25px;
+}
+
+.Detail-cost p:first-child {
+  font-size: 20px; 
 }
 
 .Detail-cost-color {
   color: #15ADFF;
   font-size: 20px;
   font-weight: bold;
+}
+
+.member-list-container {
+  margin: 12px 20px 0 20px; /* 総額の行と開始位置を揃える */
+}
+
+.member-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 6px;
+  font-size: 16px;
+}
+
+.member-list {
+  margin-top: 12px; /* メンバーリストと総額の間に余白 */
 }
 
 .date-heading {

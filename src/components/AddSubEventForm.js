@@ -149,7 +149,7 @@ export default function AddSubEventForm({ members, onAdd, isOpen, onClose, initi
         })
       );
     }
-  }, [amount, splitMethod, selectedMembers, editedAmounts]);
+  }, [amount, splitMethod, editedAmounts]);
 
 
   const handleAmountChange = (e) => {
@@ -301,6 +301,12 @@ export default function AddSubEventForm({ members, onAdd, isOpen, onClose, initi
   // 支払い者/受取人が空文字列でない場合のみプロパティに追加
   if (payer && (activeTab === "expense" || activeTab === "payment")) {
       eventData.payerId = payer;
+      // payer ID を使用して、members配列から対応するメンバーを見つける
+      const payerMember = members.find(m => m.id === payer);
+      // メンバーが見つかった場合は、payerNameプロパティを追加
+      if (payerMember) {
+          eventData.payerName = payerMember.name;
+      }
   }
   if (receiver && (activeTab === "income" || activeTab === "payment")) {
       eventData.receiverId = receiver;
