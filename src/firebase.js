@@ -20,7 +20,7 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
-const db = getFirestore(app);
+export const db = getFirestore(app);
 
 const appSubEvent = initializeApp(firebaseConfig, "eventApp"); // 名前付きアプリで区別
 export const SubEventDb = getFirestore(appSubEvent);
