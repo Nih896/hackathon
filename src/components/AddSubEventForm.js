@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
-import Modal from "./Modal";
+import EmojiPicker from 'emoji-picker-react';
+import './AddSubEventForm.css';
+//import Modal from "./Modal";
 
 const CURRENCIES = {
   jpy: { symbol: "¥", name: "日本円", flag: "🇯🇵" },
@@ -47,27 +49,59 @@ export default function AddSubEventForm({ members, onAdd, isOpen, onClose, initi
   const [receiver, setReceiver] = useState(initialData?.receiver || members[1]?.id || "");
   const [date, setDate] = useState(initialData?.date || "");
   const [selectedMembers, setSelectedMembers] = useState(initialData?.members || []);
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [emoji, setEmoji] = useState(initialData?.emoji || "😊");
   const [currency, setCurrency] = useState(initialData?.currency || "jpy");
   const [focusedInput, setFocusedInput] = useState(null);
   const [editedAmounts, setEditedAmounts] = useState({});
   const [errorMessage, setErrorMessage] = useState("");
+  
 
   useEffect(() => {
-    const initialMembers = members.map((m) => ({
-      ...m,
-      selected: true,
-      ratio: 1,
-      customAmount: "",
-    }));
-    setSelectedMembers(initialMembers);
-    setPayer(members[0]?.id || "");
-    setReceiver(members[1]?.id || "");
-    setDate(new Date().toISOString().slice(0, 10));
-    setEditedAmounts({});
-  }, [members, isOpen]);
+    if (initialData) {
+      setActiveTab(initialData.type || "expense");
+      setSplitMethod(initialData.splitMethod || "equal");
+      setTitle(initialData.title || "");
+      setEmoji(initialData.emoji || "😊");
+      setAmount(initialData.amount || "");
+      setPayer(initialData.payerId || members[0]?.id || "");
+      setReceiver(initialData.receiverId || members[1]?.id || "");
+      setDate(initialData.date || new Date().toISOString().slice(0, 10));
+      setCurrency(initialData.currency || "jpy");
+      setEditedAmounts({});
+
+      const initialMembers = members.map((m) => {
+        const foundMember = initialData.members.find((im) => im.id === m.id);
+        if (foundMember) {
+          return {
+            ...m,
+            selected: foundMember.selected,
+            ratio: foundMember.ratio || 1,
+            customAmount: foundMember.shareAmount || "",
+          };
+        }
+        return { ...m, selected: false, ratio: 1, customAmount: "" };
+      });
+      setSelectedMembers(initialMembers);
+    } else {
+      const initialMembers = members.map((m) => ({
+        ...m,
+        selected: true,
+        ratio: 1,
+        customAmount: "",
+      }));
+      setSelectedMembers(initialMembers);
+      setPayer(members[0]?.id || "");
+      setReceiver(members[1]?.id || "");
+      setDate(new Date().toISOString().slice(0, 10));
+      setEditedAmounts({});
+    }
+  }, [initialData, members]);
 
   useEffect(() => {
+    if (initialData && !Object.keys(editedAmounts).length) {
+        return;
+    }
     if (splitMethod === "custom") {
       const activeMembers = selectedMembers.filter((m) => m.selected);
       const totalAmount = Number(amount) || 0;
@@ -136,10 +170,18 @@ export default function AddSubEventForm({ members, onAdd, isOpen, onClose, initi
 
   const handleCustomInputFocus = (id) => {
     setFocusedInput(`member-amount-${id}`);
-    setEditedAmounts((prev) => ({
-      ...prev,
-      [id]: "",
-    }));
+    const member = selectedMembers.find(m => m.id === id);
+    if (member && member.customAmount !== "" && member.customAmount !== 0) {
+        setEditedAmounts((prev) => ({
+            ...prev,
+            [id]: member.customAmount,
+        }));
+    } else {
+        setEditedAmounts((prev) => ({
+            ...prev,
+            [id]: "",
+        }));
+    }
   };
 
   const handleCustomInputBlur = (id, value) => {
@@ -204,78 +246,85 @@ export default function AddSubEventForm({ members, onAdd, isOpen, onClose, initi
   };
 
   const handleSubmit = (e) => {
-    e.preventDefault();
-    
-    if (splitMethod === "custom") {
-      const totalCustomAmount = selectedMembers.filter(m => m.selected).reduce((sum, m) => sum + Number(m.customAmount), 0);
-      if (totalCustomAmount !== Number(amount)) {
-        setErrorMessage("合計金額が不正確です");
-        return;
-      }
-    }
-    if (activeTab === "payment" && payer === receiver) {
-      setErrorMessage("支払者と受取人は別の人を選んでください");
+  e.preventDefault();
+
+  if (splitMethod === "custom") {
+    const totalCustomAmount = selectedMembers.filter(m => m.selected).reduce((sum, m) => sum + Number(m.customAmount), 0);
+    if (totalCustomAmount !== Number(amount)) {
+      setErrorMessage("合計金額が不正確です");
       return;
     }
+  }
+  if (activeTab === "payment" && payer === receiver) {
+    setErrorMessage("支払者と受取人は別の人を選んでください");
+    return;
+  }
+  
+  // バリデーションチェック
+  if (!title.trim() || !amount || parseFloat(amount) <= 0) {
+      alert("タイトルと金額を正しく入力してください。");
+      return;
+  }
+  
+  setErrorMessage("");
 
-    setErrorMessage("");
-
-    // Firebaseに送るメンバーごとの負担額を計算
-    const eventMembersData = selectedMembers.map(m => {
-      let shareAmount = 0;
-      if (splitMethod === "equal") {
-        shareAmount = m.selected ? m.customAmount : 0;
-      } else if (splitMethod === "ratio") {
-        shareAmount = m.selected ? Math.floor(Number(amount) * (m.ratio / totalRatio)) : 0;
-      } else if (splitMethod === "custom") {
-        shareAmount = m.selected ? Number(m.customAmount) : 0;
-      }
-      
-      return {
-        id: m.id,
-        name: m.name,
-        shareAmount: shareAmount,
-        selected: m.selected
-      };
-    });
-    
-    // 送信用のデータオブジェクトを作成
-    let eventData = {
-      type: activeTab,
-      title: `${emoji} ${title}`,
-      amount: Number(amount),
-      currency: currency,
-      date: date,
-      splitMethod: splitMethod,
-      members: eventMembersData, // 負担額を計算したメンバーデータを設定
+  const eventMembersData = selectedMembers.map(m => {
+    const memberData = {
+      id: m.id,
+      name: m.name,
+      selected: m.selected,
     };
-
-    if (activeTab === "expense") {
-      eventData.payerId = payer;
-    } else if (activeTab === "income") {
-      eventData.receiverId = receiver;
-    } else if (activeTab === "payment") {
-      eventData.payerId = payer;
-      eventData.receiverId = receiver;
+    if (splitMethod === "ratio") {
+        memberData.ratio = m.ratio;
+        // 比率計算による負担額も保存する
+        memberData.shareAmount = m.selected ? Math.floor(Number(amount) * (m.ratio / totalRatio) || 0) : 0;
+    } else if (splitMethod === "custom") {
+        memberData.shareAmount = Number(m.customAmount) || 0;
+    } else if (splitMethod === "equal") {
+        memberData.shareAmount = m.selected ? m.customAmount : 0;
     }
+    return memberData;
+  });
 
-    // 親コンポーネントにデータを渡す
-    onAdd(eventData);
+  // 親に渡すデータオブジェクトを作成
+  const eventData = {
+    type: activeTab,
+    emoji: emoji, 
+    title: title,
+    amount: Number(amount),
+    currency: currency,
+    date: date,
+    splitMethod: splitMethod,
+    members: eventMembersData,
   };
+
+  // 支払い者/受取人が空文字列でない場合のみプロパティに追加
+  if (payer && (activeTab === "expense" || activeTab === "payment")) {
+      eventData.payerId = payer;
+  }
+  if (receiver && (activeTab === "income" || activeTab === "payment")) {
+      eventData.receiverId = receiver;
+  }
+
+  // 親コンポーネントにデータを渡す
+  onAdd(eventData);
+};
 
 
   const totalRatio = selectedMembers.filter(m => m.selected).reduce((sum, m) => sum + m.ratio, 0);
 
   const renderInputStyle = (isFocused) => ({
     padding: "8px",
-    border: `1px solid ${isFocused ? "#4da6ff" : "#ddd"}`,
+    border: `1px solid ${isFocused ? "#15ADFF" : "#92ABC5"}`,
     borderRadius: "8px",
-    background: "#f5f5f5",
+    background: "#EDF1F6",
     transition: "border-color 0.2s ease-in-out",
+    outline: "none",
   });
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
+    // <Modal isOpen={isOpen} onClose={onClose}>
+    <>
       <div
         style={{
           display: "flex",
@@ -284,10 +333,8 @@ export default function AddSubEventForm({ members, onAdd, isOpen, onClose, initi
           marginBottom: "24px",
         }}
       >
-        <h2 style={{ fontSize: "1.2em", margin: 0 }}>
-          {activeTab === "expense" && "支出を追加"}
-          {activeTab === "income" && "収入を追加"}
-          {activeTab === "payment" && "支払いを記録"}
+        <h2 style={{ fontSize: "1.4em", margin: 0 }}>
+          {initialData ? "イベントを編集" : "イベントを追加"}
         </h2>
       </div>
 
@@ -299,7 +346,7 @@ export default function AddSubEventForm({ members, onAdd, isOpen, onClose, initi
             gridTemplateColumns: "repeat(3, 1fr)",
             gap: "8px",
             marginBottom: "24px",
-            background: "#f0f0f0",
+            background: "#F6FBFF",
             borderRadius: "8px",
             padding: "4px",
           }}
@@ -315,7 +362,7 @@ export default function AddSubEventForm({ members, onAdd, isOpen, onClose, initi
                   padding: "8px",
                   borderRadius: "6px",
                   border: "none",
-                  background: activeTab === key ? "white" : "transparent",
+                  background: activeTab === key ? "#E5ECF4" : "transparent",
                   color: "#333",
                   fontWeight: activeTab === key ? "bold" : "normal",
                   cursor: "pointer",
@@ -329,49 +376,81 @@ export default function AddSubEventForm({ members, onAdd, isOpen, onClose, initi
         </div>
 
         {/* 共通フィールド */}
-        <div style={{ marginBottom: "16px" }}>
-          <label style={{ color: "#888", fontSize: "0.9em" }}>タイトル</label>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "8px",
-            }}
-          >
-            <input
-              type="text"
-              value={emoji}
-              onChange={(e) => setEmoji(e.target.value)}
-              maxLength="1"
-              onFocus={() => setFocusedInput("emoji")}
-              onBlur={() => setFocusedInput(null)}
-              style={{
-                ...renderInputStyle(focusedInput === "emoji"),
-                width: "40px",
-                textAlign: "center",
-              }}
-            />
-            <input
-              type="text"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              placeholder="例: 居酒屋"
-              onFocus={() => setFocusedInput("title")}
-              onBlur={() => setFocusedInput(null)}
-              style={{
-                ...renderInputStyle(focusedInput === "title"),
-                flex: 1,
-              }}
-            />
-          </div>
+<div style={{ marginBottom: "16px" }}>
+    <label
+        style={{
+            color: "#000000",
+            fontSize: "1.1em",
+            fontWeight: "bold",
+            display: "block",
+            marginBottom: "8px" 
+        }}
+    >
+        タイトル
+    </label>
+    <div
+        style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "8px",
+        }}
+    >
+        <div
+                    onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+                    style={{
+                        cursor: 'pointer',
+                        fontSize: '24px',
+                        width: '40px',
+                        textAlign: 'center',
+                        border: focusedInput === "emoji" ? "2px solid #15ADFF" : "1px solid #92ABC5",
+                        borderRadius: '8px',
+                        padding: '4px 0',
+                        transition: 'border-color 0.2s ease-in-out',
+                    }}
+                    onFocus={() => setFocusedInput("emoji")}
+                    onBlur={() => setFocusedInput(null)}
+                >
+                    {emoji}
+                </div>
+                
+                <input
+                    type="text"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    placeholder="例: 居酒屋"
+                    onFocus={() => setFocusedInput("title")}
+                    onBlur={() => setFocusedInput(null)}
+                    className="title-input"
+                    style={{
+                        ...renderInputStyle(focusedInput === "title"),
+                        flex: 1,
+                        color:"#000000"
+                    }}
+                />
+            </div>
+            {/* ✅ EmojiPickerのコンポーネントを追加 */}
+            {showEmojiPicker && (
+                <div style={{ position: 'absolute', zIndex: 1000 }}>
+                    <EmojiPicker
+                        onEmojiClick={(emojiObject) => {
+                            setEmoji(emojiObject.emoji);
+                            setShowEmojiPicker(false); // 選択後にピッカーを非表示
+                        }}
+                    />
+                </div>
+            )}
         </div>
 
         <div style={{ marginBottom: "16px" }}>
-          <label style={{ color: "#888", fontSize: "0.9em" }}>金額</label>
+          <label style={{ color: "#000000", fontSize: "1.1em",fontWeight: "bold",
+            display: "block",
+            marginBottom: "8px" 
+           }}>金額</label>
           <div
             style={{
               display: "flex",
               alignItems: "center",
+              gap: "8px", 
             }}
           >
             <input
@@ -387,7 +466,7 @@ export default function AddSubEventForm({ members, onAdd, isOpen, onClose, initi
                 ...renderInputStyle(focusedInput === "amount"),
                 flex: 1,
                 borderRight: "none",
-                borderRadius: "8px 0 0 8px",
+                borderRadius: "8px",
               }}
             />
             <select
@@ -398,9 +477,9 @@ export default function AddSubEventForm({ members, onAdd, isOpen, onClose, initi
               style={{
                 ...renderInputStyle(focusedInput === "currency"),
                 borderLeft: "none",
-                borderRadius: "0 8px 8px 0",
-                background: "#f5f5f5",
-                color: "#666",
+                borderRadius: "8px",
+                background: "#EDF1F6",
+                color: "#8491AC",
               }}
             >
               <option value="jpy">🇯🇵 日本円 (¥)</option>
@@ -424,12 +503,16 @@ export default function AddSubEventForm({ members, onAdd, isOpen, onClose, initi
           <div
             style={{
               display: "flex",
+              alignItems: "center",
               gap: "16px",
               marginBottom: "16px",
             }}
           >
             <div style={{ flex: 1 }}>
-              <label style={{ color: "#888", fontSize: "0.9em" }}>
+              <label style={{ color: "#000000", fontSize: "1.1em",fontWeight: "bold",
+                display: "block",
+                marginBottom: "8px" 
+               }}>
                 {activeTab === "expense" ? "支払者" : "受取人"}
               </label>
               <select
@@ -441,7 +524,9 @@ export default function AddSubEventForm({ members, onAdd, isOpen, onClose, initi
                 }
                 onFocus={() => setFocusedInput("payer-receiver")}
                 onBlur={() => setFocusedInput(null)}
-                style={renderInputStyle(focusedInput === "payer-receiver")}
+                style={{...renderInputStyle(focusedInput === "payer-receiver"),
+                  width: "100%",
+                }}
               >
                 {members.map((m) => (
                   <option key={m.id} value={m.id}>
@@ -451,14 +536,20 @@ export default function AddSubEventForm({ members, onAdd, isOpen, onClose, initi
               </select>
             </div>
             <div style={{ flex: 1 }}>
-              <label style={{ color: "#888", fontSize: "0.9em" }}>日付</label>
+              <label style={{ color: "#000000", fontSize: "1.1em" ,fontWeight: "bold",
+                display: "block",
+                marginBottom: "8px" 
+              }}>日付</label>
               <input
                 type="date"
                 value={date}
                 onChange={(e) => setDate(e.target.value)}
                 onFocus={() => setFocusedInput("date")}
                 onBlur={() => setFocusedInput(null)}
-                style={renderInputStyle(focusedInput === "date")}
+                style={{
+                    ...renderInputStyle(focusedInput === "date"),
+                    width: "95%", // ✅ 修正点: width を 100% に変更
+                }}
               />
             </div>
           </div>
@@ -475,13 +566,17 @@ export default function AddSubEventForm({ members, onAdd, isOpen, onClose, initi
             }}
           >
             <div style={{ flex: 1 }}>
-              <label style={{ color: "#888", fontSize: "0.9em" }}>支払者</label>
+              <label style={{ color: "#000000", fontSize: "1.1em",fontWeight: "bold",
+                display: "block",
+                marginBottom: "8px"  }}>支払者</label>
               <select
                 value={payer}
                 onChange={(e) => setPayer(e.target.value)}
                 onFocus={() => setFocusedInput("payer-payment")}
                 onBlur={() => setFocusedInput(null)}
-                style={renderInputStyle(focusedInput === "payer-payment")}
+                style={{...renderInputStyle(focusedInput === "payer-payment"),
+                  width: "100%",
+                }}
               >
                 {members.map((m) => (
                   <option key={m.id} value={m.id}>
@@ -490,8 +585,27 @@ export default function AddSubEventForm({ members, onAdd, isOpen, onClose, initi
                 ))}
               </select>
             </div>
+          
             <div style={{ flex: 1 }}>
-              <label style={{ color: "#888", fontSize: "0.9em" }}>受取人</label>
+              <label style={{ color: "#000000", fontSize: "1.1em",fontWeight: "bold",
+                display: "block",
+                marginBottom: "8px"  }}>日付</label>
+              <input
+                type="date"
+                value={date}
+                onChange={(e) => setDate(e.target.value)}
+                onFocus={() => setFocusedInput("date-payment")}
+                onBlur={() => setFocusedInput(null)}
+                style={{...renderInputStyle(focusedInput === "date-payment"),
+                  width: "95%",
+                }}
+              />          
+            </div>            
+          </div>
+          <div style={{ flex: 1 }}>
+              <label style={{ color: "#000000", fontSize: "1.1em",fontWeight: "bold",
+                display: "block",
+                marginBottom: "8px"  }}>受取人</label>
               <select
                 value={receiver}
                 onChange={(e) => setReceiver(e.target.value)}
@@ -506,18 +620,6 @@ export default function AddSubEventForm({ members, onAdd, isOpen, onClose, initi
                 ))}
               </select>
             </div>
-            <div style={{ flex: 1 }}>
-              <label style={{ color: "#888", fontSize: "0.9em" }}>日付</label>
-              <input
-                type="date"
-                value={date}
-                onChange={(e) => setDate(e.target.value)}
-                onFocus={() => setFocusedInput("date-payment")}
-                onBlur={() => setFocusedInput(null)}
-                style={renderInputStyle(focusedInput === "date-payment")}
-              />          
-            </div>            
-          </div>
 
 
           {errorMessage && (
@@ -543,7 +645,7 @@ export default function AddSubEventForm({ members, onAdd, isOpen, onClose, initi
                 display: "flex",
                 gap: "8px",
                 marginBottom: "16px",
-                background: "#f0f0f0",
+                background: "#F6FBFF",
                 borderRadius: "8px",
                 padding: "4px",
               }}
@@ -561,7 +663,7 @@ export default function AddSubEventForm({ members, onAdd, isOpen, onClose, initi
                     padding: "8px 12px",
                     borderRadius: "6px",
                     border: "none",
-                    background: splitMethod === method.key ? "white" : "transparent",
+                    background: splitMethod === method.key ? "#E5ECF4" : "transparent",
                     color: "#333",
                     fontWeight: splitMethod === method.key ? "bold" : "normal",
                     cursor: "pointer",
@@ -577,9 +679,9 @@ export default function AddSubEventForm({ members, onAdd, isOpen, onClose, initi
             <div
               style={{
                 padding: "8px",
-                border: "1px solid #ddd",
+                border: "1px solid #92ABC5",
                 borderRadius: "8px",
-                background: "#f5f5f5",
+                background: "#EDF1F6",
               }}
             >
               {splitMethod === "custom" && errorMessage && (
@@ -597,7 +699,7 @@ export default function AddSubEventForm({ members, onAdd, isOpen, onClose, initi
                       alignItems: "center",
                       padding: "8px 0",
                       borderBottom:
-                        index < selectedMembers.length - 1 ? "1px solid #eee" : "none",
+                        index < selectedMembers.length - 1 ? "1px solid #92ABC5" : "none",
                     }}
                   >
                     <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
@@ -614,7 +716,7 @@ export default function AddSubEventForm({ members, onAdd, isOpen, onClose, initi
                     </div>
 
                     {splitMethod === "equal" && (
-                      <span style={{ color: "#007aff", fontWeight: "bold" }}>
+                      <span style={{ fontSize: "1.2em",color: "#15ADFF", fontWeight: "bold" }}>
                         {m.selected ? `${m.customAmount}¥` : "0¥"}
                       </span>
                     )}
@@ -627,39 +729,48 @@ export default function AddSubEventForm({ members, onAdd, isOpen, onClose, initi
                           gap: "8px",
                         }}
                       >
-                        <span style={{ fontSize: "0.9em", color: "#666" }}>
+                        <span style={{ fontSize: "1.1em", color: "#15ADFF",fontWeight: "bold" }}>
                           {m.selected ? `${Math.floor(Number(amount) * (m.ratio / totalRatio) || 0)}¥` : "0¥"}
                         </span>
-                        <div style={{ display: "flex", border: "1px solid #ddd", borderRadius: "4px", overflow: "hidden", alignItems: "center" }}>
+                        {/*<div style={{ display: "flex", border: "1px solid #ddd", borderRadius: "8px", overflow: "hidden", alignItems: "center" }}>
+                        */}
                           <span style={{ padding: "4px 8px", borderRight: "1px solid #ddd" }}>{m.ratio}×</span>
                           <button
                             type="button"
                             onClick={() => changeRatio(m.id, -1)}
                             disabled={!m.selected}
                             style={{
-                              padding: "4px 8px",
+                              padding: "8px 12px",
                               border: "none",
                               borderRight: "1px solid #ddd",
-                              background: "#eee",
+                              borderRadius: "8px",
+                              background: "#DBE5F2",
                               cursor: "pointer",
+                              fontWeight: "bold",
+                              color: "white",
                             }}
                           >
-                            -
+                            ー
                           </button>
                           <button
                             type="button"
                             onClick={() => changeRatio(m.id, 1)}
                             disabled={!m.selected}
                             style={{
-                              padding: "4px 8px",
+                              padding: "8px 12px",
                               border: "none",
-                              background: "#eee",
+                              borderRadius: "8px",
+                              background: "#DBE5F2",
                               cursor: "pointer",
+                              fontWeight: "bold",
+                              color: "white",
                             }}
                           >
-                            +
+                            ＋
                           </button>
+                        {/*
                         </div>
+                        */}
                       </div>
                     )}
 
@@ -675,17 +786,53 @@ export default function AddSubEventForm({ members, onAdd, isOpen, onClose, initi
                           style={{
                             width: "80px",
                             textAlign: "right",
-                            padding: "4px 8px",
-                            border: `1px solid ${focusedInput === `member-amount-${m.id}` ? "#4da6ff" : "#ddd"}`,
+                            padding: "8px 8px",
+                            background: "#DBE5F2",
                             borderRadius: "4px",
                             transition: "border-color 0.2s ease-in-out",
+                            border: "none",
                           }}
                         />
                         <div style={{ display: "flex", gap: "4px" }}>
-                          <button type="button" onClick={() => handleCalcButton(m.id, "+")} disabled={!m.selected}>+</button>
-                          <button type="button" onClick={() => handleCalcButton(m.id, "-")} disabled={!m.selected}>-</button>
-                          <button type="button" onClick={() => handleCalcButton(m.id, "*")} disabled={!m.selected}>×</button>
-                          <button type="button" onClick={() => handleCalcButton(m.id, "/")} disabled={!m.selected}>÷</button>
+                          <button type="button" 
+                          style={{
+                            textAlign: "right",
+                            padding: "8px 12px",
+                            background: "#DBE5F2",
+                            borderRadius: "4px",
+                            transition: "border-color 0.2s ease-in-out",
+                            border: "none",
+                          }}onClick={() => handleCalcButton(m.id, "+")} disabled={!m.selected}>+</button>
+                          <button type="button" 
+                          style={{
+                            textAlign: "right",
+                            padding: "8px 14px",
+                            background: "#DBE5F2",
+                            borderRadius: "4px",
+                            transition: "border-color 0.2s ease-in-out",
+                            border: "none",
+                          }}
+                          onClick={() => handleCalcButton(m.id, "-")} disabled={!m.selected}>-</button>
+                          <button type="button" 
+                          style={{
+                            textAlign: "right",
+                            padding: "8px 12px",
+                            background: "#DBE5F2",
+                            borderRadius: "4px",
+                            transition: "border-color 0.2s ease-in-out",
+                            border: "none",
+                          }}
+                          onClick={() => handleCalcButton(m.id, "*")} disabled={!m.selected}>×</button>
+                          <button type="button" 
+                          style={{
+                            textAlign: "right",
+                            padding: "8px 12px",
+                            background: "#DBE5F2",
+                            borderRadius: "4px",
+                            transition: "border-color 0.2s ease-in-out",
+                            border: "none",
+                          }}
+                          onClick={() => handleCalcButton(m.id, "/")} disabled={!m.selected}>÷</button>
                         </div>
                       </div>
                     )}
@@ -705,7 +852,7 @@ export default function AddSubEventForm({ members, onAdd, isOpen, onClose, initi
             marginTop: "16px",
             borderRadius: "8px",
             border: "none",
-            backgroundColor: "#007aff",
+            backgroundColor: "#51bff9ff",
             color: "white",
             fontSize: "1em",
             fontWeight: "bold",
@@ -715,6 +862,7 @@ export default function AddSubEventForm({ members, onAdd, isOpen, onClose, initi
           追加
         </button>
       </form>
-    </Modal>
+    </>
+    //</Modal>
   );
 }
