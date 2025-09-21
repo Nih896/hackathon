@@ -115,7 +115,7 @@ export default function AddSubEventForm({ members, onAdd, isOpen, onClose, initi
         })
       );
     }
-  }, [amount, splitMethod, selectedMembers.length, editedAmounts]);
+  }, [amount, splitMethod, selectedMembers, editedAmounts]);
 
 
   const handleAmountChange = (e) => {
