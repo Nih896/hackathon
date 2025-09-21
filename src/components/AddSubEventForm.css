@@ -1,0 +1,5 @@
+/* App.css */
+.title-input::placeholder {
+    /* ✅ プレースホルダーの文字色を変更 */
+    color: #8491AC; 
+}
