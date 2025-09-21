@@ -1,0 +1,33 @@
+.token-container {
+  position: fixed;
+  bottom: -100px; /* 最初は画面外 */
+  right: 20px;
+  z-index: 1000;
+  padding: 20px 40px;
+  border-radius: 10px;
+  background-color: #FFFF;
+  align-items: center;
+  opacity: 0;
+  transition: all 0.5s ease; /* アニメーション */
+  border: #86909D solid 1px;
+}
+
+.token-container.show {
+  bottom: 20px;  /* 表示位置 */
+  opacity: 1;    /* 表示 */
+}
+
+.Token-text {
+    color: black;
+    margin: 0;
+    padding-bottom: 10px;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.Token-subtext {
+    color: #86909D;
+    margin: 0;
+    font-size: 12px;
+    padding-left: 5px;
+}

@@ -6,6 +6,7 @@ import { Routes, Route, Link } from 'react-router-dom';
 import Event from './Event';
 import EventCreatePage from './EventCreatePage';
 import SubEventFormPage from './pages/SubEventFormPage';
+import EventEditPage from './EventEditPage';
 
 //import db from "./firebase";
 //import { doc, collection, getDocs, onSnapshot, addDoc } from "firebase/firestore"; 
@@ -26,6 +27,7 @@ function App() {
           <Route path="/EventCreatePage" element={<EventCreatePage />} />
           <Route path="/event/:id" element={<Event />} />
           <Route path="/subevent" element={<SubEventFormPage />} />
+          <Route path="/event/:id/edit" element={<EventEditPage />} />
         </Routes>
       </div>
     </div>

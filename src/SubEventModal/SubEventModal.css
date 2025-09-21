@@ -1,0 +1,37 @@
+.Modal-text {
+  padding: 10px 10px;
+}
+
+.Modal-h2 {
+  margin: 0;
+  padding-bottom: 5px;
+  font-size: 15px;
+}
+
+.Modal-cost {
+  display: flex;
+  justify-content: space-between; /* 左右に配置 */
+  justify-items: center;
+  border: none; /*境界線の指定*/
+  background: #F4F9FF;
+  border-radius:10px;
+  margin-top: 8px;
+  margin-bottom: 8px;
+  margin-left: 0;
+  padding: 0px 10px;
+}
+
+.Modal-btn-position {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.Modal-btn2 {
+  border-radius:10px;
+  background: #60C8FF;
+  border: none;
+  color: #FFFFFF;
+  font-size: 14px;
+  padding: 7px 15px;
+  margin: 0px 0px 0px 10px;
+}
