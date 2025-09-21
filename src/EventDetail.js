@@ -6,10 +6,16 @@ import './App.css';
 import './Event.css';
 import SubEventModal from "./SubEventModal"; // ← モーダルコンポーネントをインポート
 
+import { getExpenseSummary } from "./function/function";
+
 function EventDetail({ id }) {
   const [subevents, setSubevents] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
+
+  // 👇 追加: 集計用のstate
+  const [totalExpense, setTotalExpense] = useState(0);
+  const [memberExpenses, setMemberExpenses] = useState({});
 
   useEffect(() => {
     const fetchSubevents = async () => {
@@ -60,6 +66,12 @@ function EventDetail({ id }) {
         });
 
         setSubevents(normalized);
+
+        // 👇 集計を呼び出す
+        const { totalExpense, memberExpenses } = await getExpenseSummary(id);
+        setTotalExpense(totalExpense);
+        setMemberExpenses(memberExpenses);
+
       } catch (err) {
         console.error("fetchSubevents error:", err);
       }
@@ -102,9 +114,19 @@ function EventDetail({ id }) {
         <h2 className="Event-h2">総支出</h2>
         <div className="Detail-cost">
           <p>総額</p>
-          <p className="Detail-cost-color">1000</p>
+          <p className="Detail-cost-color">{totalExpense} ￥</p>
         </div>
-        
+        {/* メンバーリスト全体を囲むdivを追加 */}
+        <div className="member-list-container">
+          {Object.entries(memberExpenses).map(([id, m]) => (
+            <div key={id} className="member-row">
+              <span>{m.name}</span>
+              <span>{m.amount} ￥</span>
+            </div>
+          ))}
+        </div>
+
+
       </div>
 
 
