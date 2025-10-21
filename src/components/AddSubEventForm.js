@@ -40,7 +40,7 @@ const CURRENCIES = {
   zar: { symbol: "R", name: "南アフリカランド", flag: "🇿🇦" },
 };
 
-export default function AddSubEventForm({ members, onAdd, isOpen, onClose, initialData }) {
+export default function AddSubEventForm({ members, onAdd, isOpen, onClose, initialData, initialCarrency }) {
   const [activeTab, setActiveTab] = useState(initialData?.type || "expense");
   const [splitMethod, setSplitMethod] = useState(initialData?.splitMethod || "equal");
   const [title, setTitle] = useState(initialData?.title || "");
@@ -51,7 +51,7 @@ export default function AddSubEventForm({ members, onAdd, isOpen, onClose, initi
   const [selectedMembers, setSelectedMembers] = useState(initialData?.members || []);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [emoji, setEmoji] = useState(initialData?.emoji || "😊");
-  const [currency, setCurrency] = useState(initialData?.currency || "jpy");
+  const [currency, setCurrency] = useState(initialData?.currency || initialCarrency);
   const [focusedInput, setFocusedInput] = useState(null);
   const [editedAmounts, setEditedAmounts] = useState({});
   const [errorMessage, setErrorMessage] = useState("");
@@ -67,7 +67,7 @@ export default function AddSubEventForm({ members, onAdd, isOpen, onClose, initi
       setPayer(initialData.payerId || members[0]?.id || "");
       setReceiver(initialData.receiverId || members[1]?.id || "");
       setDate(initialData.date || new Date().toISOString().slice(0, 10));
-      setCurrency(initialData.currency || "jpy");
+      setCurrency(initialData.currency || initialCarrency);
       setEditedAmounts({});
 
       const initialMembers = members.map((m) => {
