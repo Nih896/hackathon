@@ -40,7 +40,7 @@ const CURRENCIES = {
   zar: { symbol: "R", name: "南アフリカランド", flag: "🇿🇦" },
 };
 
-export default function AddSubEventForm({ members, onAdd, isOpen, onClose, initialData }) {
+export default function AddSubEventForm({ members, onAdd, isOpen, onClose, initialData, initialCarrency }) {
   const [activeTab, setActiveTab] = useState(initialData?.type || "expense");
   const [splitMethod, setSplitMethod] = useState(initialData?.splitMethod || "equal");
   const [title, setTitle] = useState(initialData?.title || "");
@@ -51,7 +51,7 @@ export default function AddSubEventForm({ members, onAdd, isOpen, onClose, initi
   const [selectedMembers, setSelectedMembers] = useState(initialData?.members || []);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [emoji, setEmoji] = useState(initialData?.emoji || "😊");
-  const [currency, setCurrency] = useState(initialData?.currency || "jpy");
+  const [currency, setCurrency] = useState(initialData?.currency || initialCarrency);
   const [focusedInput, setFocusedInput] = useState(null);
   const [editedAmounts, setEditedAmounts] = useState({});
   const [errorMessage, setErrorMessage] = useState("");
@@ -67,7 +67,7 @@ export default function AddSubEventForm({ members, onAdd, isOpen, onClose, initi
       setPayer(initialData.payerId || members[0]?.id || "");
       setReceiver(initialData.receiverId || members[1]?.id || "");
       setDate(initialData.date || new Date().toISOString().slice(0, 10));
-      setCurrency(initialData.currency || "jpy");
+      setCurrency(initialData.currency || initialCarrency);
       setEditedAmounts({});
 
       const initialMembers = members.map((m) => {
@@ -268,23 +268,28 @@ export default function AddSubEventForm({ members, onAdd, isOpen, onClose, initi
   
   setErrorMessage("");
 
-  const eventMembersData = selectedMembers.map(m => {
-    const memberData = {
-      id: m.id,
-      name: m.name,
-      selected: m.selected,
-    };
-    if (splitMethod === "ratio") {
-        memberData.ratio = m.ratio;
-        // 比率計算による負担額も保存する
-        memberData.shareAmount = m.selected ? Math.floor(Number(amount) * (m.ratio / totalRatio) || 0) : 0;
-    } else if (splitMethod === "custom") {
-        memberData.shareAmount = Number(m.customAmount) || 0;
-    } else if (splitMethod === "equal") {
-        memberData.shareAmount = m.selected ? m.customAmount : 0;
-    }
-    return memberData;
-  });
+  const eventMembersData = [];
+  if (activeTab === "payment") {
+  // 支払いの場合は、負担者リスト（members）は空にする
+  eventMembersData = []; 
+  } else {
+    eventMembersData = selectedMembers.map(m => {
+      const memberData = {
+        id: m.id,
+        name: m.name,
+        selected: m.selected,
+      };
+      if (splitMethod === "ratio") {
+          memberData.ratio = m.ratio;
+          memberData.shareAmount = m.selected ? Math.floor(Number(amount) * (m.ratio / totalRatio) || 0) : 0;
+      } else if (splitMethod === "custom") {
+          memberData.shareAmount = Number(m.customAmount) || 0;
+      } else if (splitMethod === "equal") {
+          memberData.shareAmount = m.selected ? m.customAmount : 0;
+      }
+      return memberData;
+    });
+  }
 
   // 親に渡すデータオブジェクトを作成
   const eventData = {
@@ -330,7 +335,7 @@ export default function AddSubEventForm({ members, onAdd, isOpen, onClose, initi
 
   return (
     // <Modal isOpen={isOpen} onClose={onClose}>
-    <>
+    <div>
       <div
         style={{
           display: "flex",
@@ -430,7 +435,10 @@ export default function AddSubEventForm({ members, onAdd, isOpen, onClose, initi
                     style={{
                         ...renderInputStyle(focusedInput === "title"),
                         flex: 1,
-                        color:"#000000"
+                        color:"#000000",
+                        fontSize: '16px',
+                        height:"24px",
+                        paddingLeft:"12px"
                     }}
                 />
             </div>
@@ -447,47 +455,70 @@ export default function AddSubEventForm({ members, onAdd, isOpen, onClose, initi
             )}
         </div>
 
-        <div style={{ marginBottom: "16px" }}>
-          <label style={{ color: "#000000", fontSize: "1.1em",fontWeight: "bold",
-            display: "block",
-            marginBottom: "8px" 
-           }}>金額</label>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "8px", 
+        <div 
+          style={{
+        display: "flex",
+        alignItems: "center",
+        gap: "16px",
+        marginBottom: "16px",
+    }}
+>
+    {/* 💰 金額のグループ */}
+    <div style={{ flex: 1 }}>
+        <label // 💡 ラベルを追加
+            style={{ 
+                color: "#000000", 
+                fontSize: "1.1em",
+                fontWeight: "bold",
+                display: "block",
+                marginBottom: "8px",
+                paddingLeft:"5px"
             }}
-          >
-            <input
-              type="number"
-              value={amount}
-              onChange={handleAmountChange}
-              onFocus={() => setFocusedInput("amount")}
-              onBlur={() => {
+        >
+            金額
+        </label>
+        <input
+            type="number"
+            value={amount}
+            onChange={handleAmountChange}
+            onFocus={() => setFocusedInput("amount")}
+            onBlur={() => {
                 setFocusedInput(null);
                 if (amount === "") setAmount("0");
-              }}
-              style={{
+            }}
+            style={{
                 ...renderInputStyle(focusedInput === "amount"),
-                flex: 1,
-                borderRight: "none",
+                width: "92%", 
                 borderRadius: "8px",
-              }}
-            />
-            <select
-              value={currency}
-              onChange={handleCurrencyChange}
-              onFocus={() => setFocusedInput("currency")}
-              onBlur={() => setFocusedInput(null)}
-              style={{
+                paddingLeft:"12px"
+            }}
+        />
+    </div>
+            {/*  通貨のグループ */}
+    <div style={{ flex: 1 }}>
+        <label 
+            style={{ 
+                color: "#000000", 
+                fontSize: "1.1em",
+                fontWeight: "bold",
+                display: "block",
+                marginBottom: "8px" ,
+                
+            }}
+        >
+            通貨
+        </label>
+        <select
+            value={currency}
+            onChange={handleCurrencyChange}
+            onFocus={() => setFocusedInput("currency")}
+            onBlur={() => setFocusedInput(null)}
+            style={{
                 ...renderInputStyle(focusedInput === "currency"),
-                borderLeft: "none",
+                width: "100%",
                 borderRadius: "8px",
-                background: "#EDF1F6",
-                color: "#8491AC",
-              }}
-            >
+            }}
+        >
               <option value="jpy">🇯🇵 日本円 (¥)</option>
               <option value="usd">🇺🇸 米ドル ($)</option>
               <option value="eur">🇪🇺 ユーロ (€)</option>
@@ -517,7 +548,8 @@ export default function AddSubEventForm({ members, onAdd, isOpen, onClose, initi
             <div style={{ flex: 1 }}>
               <label style={{ color: "#000000", fontSize: "1.1em",fontWeight: "bold",
                 display: "block",
-                marginBottom: "8px" 
+                marginBottom: "8px" ,
+                paddingLeft:"5px"
                }}>
                 {activeTab === "expense" ? "支払者" : "受取人"}
               </label>
@@ -532,6 +564,7 @@ export default function AddSubEventForm({ members, onAdd, isOpen, onClose, initi
                 onBlur={() => setFocusedInput(null)}
                 style={{...renderInputStyle(focusedInput === "payer-receiver"),
                   width: "100%",
+                  paddingLeft:"5px"
                 }}
               >
                 {members.map((m) => (
@@ -554,7 +587,8 @@ export default function AddSubEventForm({ members, onAdd, isOpen, onClose, initi
                 onBlur={() => setFocusedInput(null)}
                 style={{
                     ...renderInputStyle(focusedInput === "date"),
-                    width: "95%", // ✅ 修正点: width を 100% に変更
+                    width: "95%",
+                    paddingLeft:"10px"
                 }}
               />
             </div>
@@ -577,7 +611,7 @@ export default function AddSubEventForm({ members, onAdd, isOpen, onClose, initi
                 marginBottom: "8px"  }}>支払者</label>
               <select
                 value={payer}
-                onChange={(e) => setPayer(e.target.value)}
+                onChange={(e) => setPayer(Number(e.target.value))}
                 onFocus={() => setFocusedInput("payer-payment")}
                 onBlur={() => setFocusedInput(null)}
                 style={{...renderInputStyle(focusedInput === "payer-payment"),
@@ -868,7 +902,6 @@ export default function AddSubEventForm({ members, onAdd, isOpen, onClose, initi
           追加
         </button>
       </form>
-    </>
-    //</Modal>
+    </div>
   );
 }
