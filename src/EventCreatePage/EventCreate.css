@@ -1,0 +1,174 @@
+.EventCreate-main {
+  padding-left: 20px;
+  padding-right: 20px;
+  min-height: 100vh;
+  height: auto
+}
+
+.EventCreate-flex {
+  display: flex;
+}
+
+.EventCreate-h1 {
+  margin: 0;
+  padding-top: 20px;
+  padding-bottom: 5px;
+  font-size: 28px;
+  cursor:default;
+}
+
+.EventCreate-h2 {
+  margin: 0;
+  padding-top: 20px;
+  padding-bottom: 5px;
+  font-size: 20px;
+  cursor:default;
+}
+
+.EventCreate-h3 {
+  margin: 0;
+  font-size: 16px;
+  color: #778396;
+  cursor:default;
+}
+
+.EventCreate-error {
+  padding-left: 10px;
+  padding-top: 22px;
+  font-size: 16px;
+  color: #FF3535;
+  cursor:default;
+  margin: 0;
+}
+
+.EventCreate-input {
+  border-radius:10px;
+  background: transparent;
+  border:1px solid #97B1CC;
+  height: 35px;
+  width: 100%;
+  padding-left: 8px;
+}
+.EventCreate-input:focus { /*選択したときの枠の色*/
+  outline: none;                /* ← デフォルトの青枠を消す */
+  border: 1px solid #15ADFF;    /* ← 枠線の色を変更 */
+}
+
+.EventCreate-img {
+  width: 30px;
+  height: 30px;
+  padding-top: 4px;  
+}
+
+.EventCreate-btn-right {
+  text-align: right;
+}
+
+.EventReturn-btn {
+  border-radius:10px;
+  background: #EDF1F6;
+  border: 1px solid #60C8FF;
+  color: #60C8FF;
+  font-size: 14px;
+  padding: 10px 15px;
+  margin: 15px 10px;
+  cursor: pointer;
+}
+
+.EventCreate-btn {
+  border-radius:10px;
+  background: #60C8FF;
+  border: none;
+  color: #FFFFFF;
+  font-size: 14px;
+  padding: 10px 15px;
+  margin: 15px 0px;
+  cursor: pointer;
+}
+
+/*picker*/
+.EventCreate-picker {
+    cursor: pointer;
+    font-size: 24px;
+    width: 37px;
+    height: 37px;
+    text-align: center;
+    border-radius: 10px;
+    margin-right: 10px;
+}
+
+.EventCreate-pickerdoloar {
+    position: absolute;
+    z-index: 1000;
+    margin-top: 40px;
+    left: 20px; /* 横位置 */
+    display: flex;
+}
+
+.emoji-picker {
+  width: 330px !important;
+  height: 330px !important;
+}
+
+/* 参加者 */
+.member-container {
+  border: 1px solid #97B1CC;
+  border-radius: 10px;
+  background: transparent;
+  padding: 0;
+  overflow: hidden; /* はみ出した部分を非表示 */
+}
+
+.member-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.member-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 15px;
+  border-bottom: 1px solid #97B1CC; /* 区切り線 */
+  font-size: 14px;
+}
+
+.member-name {
+  cursor: default;
+}
+
+.remove-btn {
+  background: transparent;
+  border: none;
+  color: #555;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.member-input {
+  border: none;
+  background: transparent;
+  padding: 10px 15px;
+  color: #15ADFF;
+  font-size: 14px;
+  width: 100%;
+}
+.member-input:focus {
+  outline: none;
+  border: none;
+}
+
+.member-top-row {
+  border-top: 1px solid #97B1CC;
+}
+
+.member-addbtn {
+  background: transparent;
+  padding: 8px 15px;
+  border: none;
+  color: #15ADFF;
+  font-size: 14px;
+  cursor: pointer;
+}

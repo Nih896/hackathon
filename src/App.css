@@ -3,6 +3,8 @@
   font-family: 'Inria Sans';
   text-align: left;
   color: #000000;
+  /* タップ時のハイライトを透明にする */
+  -webkit-tap-highlight-color: transparent;
 }
 
 .App-logo {
@@ -15,24 +17,18 @@
 @import url('https://fonts.googleapis.com/css2?family=Inria+Sans:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap');
 
 
-/*@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}*/
-
 .App-header {
   background-color: #FFFFFF;
-  display: flex;
   text-align: left;
   padding: 5px 0px 5px 20px;
   font-size: 10px;
 }
 
-.App-main {
-  padding-left: 20px;
-  height: 100vh;
+.App-flex {
+  display: inline-flex;
+  cursor: pointer;
 }
+
 .App-h1 {
   margin: 0;
   padding-top: 20px;
@@ -60,97 +56,12 @@
   color: #FF3535;
 }
 
-.App-input {
-  border-radius:10px;
-  background: #F0F4F8;
-  border:1px solid #97B1CC;
-  height: 35px;
-  width: 97%;
-  padding-left: 8px;
-}
-.App-input:focus { /*選択したときの枠の色*/
-  outline: none;                /* ← デフォルトの青枠を消す */
-  border: 1px solid #15ADFF;    /* ← 枠線の色を変更 */
-}
+
 
 .App-form {
   display: flex;
 }
 
-.member-container {
-  border: 1px solid #97B1CC;
-  border-radius: 8px;
-  background: #F0F4F8;
-  padding: 0;
-  overflow: hidden; /* 内側の枠線を綺麗に見せる */
-  width: 98%;
-}
-
-.member-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-.member-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 8px 12px;
-  border-bottom: 1px solid #97B1CC; /* 区切り線 */
-}
-
-.member-item:last-child {
-  border-bottom: none; /* 最後は線を消す */
-}
-
-.member-name {
-  margin-right: 8px;
-}
-
-.remove-btn {
-  background: transparent;
-  border: none;
-  color: #555;
-  cursor: pointer;
-  font-size: 14px;
-  font-weight: bold;
-}
-
-.member-input {
-  width: 100%;
-  border: none;
-  background: #F0F4F8;
-}
-.member-input:focus { /*選択したときの枠の色*/
-  outline: none;                /* ← デフォルトの青枠を消す */
-  border: none;    /* ← 枠線の色を変更 */
-}
-
-.member-form {
-  padding: 0;
-  border-top: 1px solid #97B1CC;
-  display: flex;
-  flex-direction: column;
-}
-
-.member-input-row,
-.member-button-row {
-  padding: 8px 12px;
-  border-bottom: 1px solid #97B1CC;
-}
-
-.member-button-row {
-  border-bottom: none; /* 最後の行は線を消す */
-}
-
-.member-btn {
-  background: transparent;
-  padding-left: 0;
-  border: none;
-  color: #15ADFF;
-  font-size: 14px;
-}
 
 .button-wrapper {
   text-align: right;
@@ -165,17 +76,3 @@
   padding: 10px 15px;
   margin: 10px 10px;
 }
-
-
-/*.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}*/

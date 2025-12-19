@@ -1,0 +1,142 @@
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5); /* 半透明の背景 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  width: 400px;
+  max-width: 90%;
+  position: relative;
+  display: flex;
+}
+
+.modal-btn {
+  position: absolute;
+  top: 10px;  /* 上からの余白 */
+  right: 10px; /* 右からの余白 */
+  font-size: 20px;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  color: #666;
+  transition: color 0.2s;
+}
+
+.modal-body {
+  flex: 1;              /* 残りをスクロール領域にする */
+  overflow-y: auto;     /* 中身だけスクロール */
+  overflow-x: hidden;   /* 横スクロール禁止 */
+  /* スクロールバー非表示 */
+  scrollbar-width: none;       /* Firefox */
+  -ms-overflow-style: none;    /* IE, Edge */
+}
+
+.modal-h2 {
+  margin: 0;
+  padding-top: 10px;
+  padding-bottom: 5px;
+  font-size: 20px;
+  cursor:default;
+}
+
+.modal-searchbox {
+  display: flex;
+  align-items: center;
+  background: #EDF1F6;
+  border-radius: 10px;
+  padding: 8px;
+}
+
+.modal-icon {
+  width: 20px;
+  height: 20px;
+  padding-right: 10px;
+}
+
+.modal-search {
+  border:none;
+  background: #EDF1F6;
+  width: 100%;
+}
+.modal-search:focus {
+  outline: none;  
+}
+
+.modal-boder {
+  height: 1px;
+  background-color: #97B1CC;
+  border: none;
+}
+
+.modal-expect {
+  font-size: 18px;
+  font-weight: bold;
+  cursor:default;
+}
+
+.modal-none {
+  background: #EDF1F6;
+  padding: 16px 0;
+}
+
+.modal-heading {
+  font-size: 16px;
+  font-weight: bold;
+  padding-left: 5px;
+  cursor:default;
+}
+
+.modal-list {
+  list-style: none;
+  margin-top: 5px;
+  padding: 0;
+  border: none;
+  border-radius: 10px;
+  background: #EDF1F6;
+  overflow: hidden; /* はみ出した部分を非表示 */
+}
+
+.modal-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 15px;
+  border-bottom: 1px solid #97B1CC; /* 区切り線 */
+  font-size: 14px;
+  cursor: pointer;
+}
+/* 最後の要素だけ線を消す */
+.modal-item.last-item {
+  border-bottom: none;
+}
+
+.modal-country {
+  display: flex;
+  align-items: flex-end;
+}
+
+.modal-flag {
+  display: flex;
+  font-size: 10px;
+  font-weight: bold;
+  padding-right: 5px;
+}
+
+.modal-currency {
+  display: flex;
+  color: #778396;
+}
+
+.modal-upper {
+  text-transform: uppercase;
+}

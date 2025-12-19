@@ -1,0 +1,94 @@
+.Datemodal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5); /* 半透明の背景 */
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding-top: 50px;
+  overflow-y: auto;
+}
+
+.Datemodal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  width: 400px;
+  max-width: 90%;
+  position: relative;
+}
+
+.Datemodal-close {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  border: none;
+  background: none;
+  font-size: 28px;
+  cursor: pointer;
+}
+
+.Datemodal-pagechange {
+ display: flex;
+ justify-content: space-between; /* 子要素を両端に配置 */
+ align-items: center; /* 子要素を垂直方向の中央に揃える */
+ width: 100%; /* 親要素の幅を100%に広げる */
+ padding-top: 10px;
+}
+
+.Datemodal-nextbtn {
+  border: none;
+  background: none;
+  color: #778396;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.Datemodal-emoji {
+  font-size: 32px;
+  text-align: center;
+  cursor: default;
+}
+
+.Datemodal-title {
+  text-align: center;
+  margin: 0;
+  cursor: default;
+}
+
+.Datemodal-date {
+  text-align: center;
+  color: #778396;
+  margin: 0;
+  cursor: default;
+}
+
+.Datemodal-btn {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.Datemodal-removebtn {
+  border-radius:10px;
+  background: #FF6567;
+  border: none;
+  color: #FFFFFF;
+  font-size: 14px;
+  padding: 7px 24px;
+  margin: 0px 0px 0px 10px;
+  cursor: pointer;
+}
+
+.Datemodal-editbtn {
+  border-radius:10px;
+  background: #5EC3F9;
+  border: none;
+  color: #FFFFFF;
+  font-size: 14px;
+  padding: 7px 24px;
+  margin: 0px 10px 0px 10px;
+  cursor: pointer;
+}

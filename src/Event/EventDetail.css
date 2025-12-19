@@ -1,0 +1,112 @@
+.Detail-box {
+  border: #97B1CC 1px solid; /*境界線の指定*/
+  background: #FFFFFF;
+  border-radius:10px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  padding: 20px 20px 20px 20px;
+}
+
+.Detail-h2 {
+  margin: 0;
+  padding-left: 8px;
+  padding-bottom: 10px;
+  font-size: 24px;
+  cursor: default;
+}
+
+.Detail-currency {
+  text-transform: uppercase;
+  padding: 10px 0 10px 8px;
+  margin: 0;
+}
+
+.Detail-totalcostbox {
+  display: flex;
+  justify-content: space-between;
+  align-items: center; /* 垂直方向の中央揃えを追加 */
+  background: #F4F9FF;
+  border-radius: 10px;
+  padding: 10px 8px;
+}
+
+.Detail-totalname {
+  font-size: 18px;
+  cursor: default;
+}
+
+.Detail-totalcost {
+  color: #15ADFF;
+  font-size: 20px;
+  font-weight: bold;
+  cursor: default;
+}
+
+.Detail-members {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 12px;
+  padding-left: 8px;
+  padding-right: 8px;
+  font-size: 16px;
+  cursor: default;
+}
+
+.Detail-boder {
+  height: 1px;
+  background-color: #97B1CC;
+  border: none;
+}
+
+/*サブイベント一覧*/ 
+.Detail-suneventdate {
+  font-size: 20px;
+  color: #000;
+  font-weight: bold;
+  margin-top: 15px;
+  margin-left: 5px;
+  cursor: default;
+}
+
+.Detail-subeventcard {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: #97B1CC 1px solid;
+  border-radius: 10px;
+  background: #FFFFFF;
+  padding: 5px;
+  margin-top: 10px;
+  cursor: pointer;
+}
+
+.Detail-subheading{
+  display: flex;
+  align-items: center;
+}
+
+.Detail-subemoji {
+  font-size: 30px;
+  padding: 0;
+  margin: 0;
+}
+
+.Detail-subtitles {
+  font-size: 20px;
+  margin-top: 2px;
+  margin-left: 10px;
+}
+
+.Detail-message {
+  font-size: 15px;
+  color: #7E909F;
+  margin: 0;
+  padding: 0;
+}
+
+.Detail-subamount {
+  font-size: 20px;
+  font-weight: bold;
+  padding-right: 15px;
+}
