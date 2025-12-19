@@ -12,7 +12,7 @@ import { db } from "../firebase";
   },
 */
 
-export async function addgetSettlement(eventId) {
+export async function addgetSettlement(eventId, events) {
   if (!eventId) {
     throw new Error("eventId is required");
   }
@@ -42,12 +42,12 @@ export async function addgetSettlement(eventId) {
 
     // 支出
     if (type === "expense") {
-      const payerId = sub.payerId;
+      const payerId = String(sub.payerId);
       for (const key in members) {
         const { id, name, shareAmount } = members[key];
         if (!totals[id]) totals[id] = { name, total: 0 };
 
-        if (id === payerId) {
+        if (String(id) === payerId) {
           totals[id].total += amount - shareAmount;
         } else {
           totals[id].total -= shareAmount;
@@ -56,13 +56,13 @@ export async function addgetSettlement(eventId) {
 
     // 収入
     } else if (type === "income") {
-      const receiverId = sub.receiverId;
+      const receiverId = String(sub.receiverId);
       for (const key in members) {
         const { id, name, shareAmount } = members[key];
         if (!totals[id]) totals[id] = { name, total: 0 };
 
-        if (id === receiverId) {
-          totals[id].total -= amount + shareAmount;
+        if (String(id) === receiverId) {
+          totals[id].total -= (amount - shareAmount);
         } else {
           totals[id].total += shareAmount;
         }
@@ -70,16 +70,16 @@ export async function addgetSettlement(eventId) {
 
     // 支払い
     } else if (type === "payment") {
-      const payerId = sub.payerId;
-      const receiverId = sub.receiverId;
-      for (const key in members) {
-        const { id, name, shareAmount } = members[key];
+      const payerId = String(sub.payerId);
+      const receiverId = String(sub.receiverId);
+      for (const key in events?.members) {
+        const { id, name} = events?.members[key];
         if (!totals[id]) totals[id] = { name, total: 0 };
 
-        if (id === payerId) {
-          totals[id].total -= shareAmount;
-        } else if (id === receiverId) {
-          totals[id].total += shareAmount;
+        if (String(id) === payerId) {
+          totals[id].total += amount;
+        } else if (String(id) === receiverId) {
+          totals[id].total -= amount;
         }
       }
     }

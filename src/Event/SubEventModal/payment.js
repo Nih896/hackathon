@@ -1,7 +1,7 @@
 import CURRENCIES from "../../EventCreatePage/Country";
 import './SubEventModal.css';
 
-function payment({ subevent }) {
+function payment({ events, subevent }) {
 
   return (
     <div className="Modal-all">
@@ -12,10 +12,13 @@ function payment({ subevent }) {
           支払人
       </p>
       <div className="Modal-costbox">
-        <span className="Modal-text">{(() => {
-          const payer = subevent.members?.find(m => m.id === subevent.payerId);
-          return payer ? payer.name : subevent.payerId; 
-        })()}</span>
+        <span className="Modal-text">
+          {
+            events?.members?.find(
+              (members) => String(members.id) === String(subevent.payerId)
+            )?.name || "不明"
+          }
+        </span>
         <p className="Modal-cost">{subevent.amount}{CURRENCIES[subevent.currency].symbol}</p>
       </div>
 
@@ -23,13 +26,15 @@ function payment({ subevent }) {
           受取人
       </p>
       <div className="Modal-costbox">
-        <span className="Modal-text">{(() => {
-          const receiver = subevent.members?.find(m => m.id === subevent.receiverId);
-          return receiver ? receiver.name : subevent.payerId; 
-        })()}</span>
+        <span className="Modal-text">
+          {
+            events?.members?.find(
+              (members) => String(members.id) === String(subevent.receiverId)
+            )?.name || "不明"
+          }
+        </span>
         <p className="Modal-cost">{subevent.amount}{CURRENCIES[subevent.currency].symbol}</p>
       </div>
-        
       
     </div>
   );

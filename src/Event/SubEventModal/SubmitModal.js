@@ -7,7 +7,6 @@ function SubmitModal({ isOpen, onClose, eventId, subevent}) {
 
  if (!isOpen) return null;
 
-
 const handleDelete = async () => {
   try {
     const docRef = doc(db, "events", eventId, "SubEvents", subevent.id);

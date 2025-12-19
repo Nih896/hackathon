@@ -36,7 +36,7 @@ export async function getExpenseSummary(eventId) {
     const sub = docSnap.data();
 
     if (sub.type === "expense") {
-      const { payerId, amount, payerName, currency } = sub;
+      const { payerId, amount, currency } = sub;
       if (!payerId || !amount) return;
 
       const cur = currency || "未指定"; // 通貨未指定のものも区別
@@ -57,7 +57,7 @@ export async function getExpenseSummary(eventId) {
     currencyData[cur].totalExpense += amount;
 
       if (!currencyData[cur].memberExpenses[payerId]) {
-        currencyData[cur].memberExpenses[payerId] = { name: payerName || payerId, amount: 0 };
+        currencyData[cur].memberExpenses[payerId] = { name: "不明", amount: 0 };
       }
       currencyData[cur].memberExpenses[payerId].amount += amount;
     }
