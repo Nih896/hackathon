@@ -145,7 +145,8 @@ function Event() {
             className="Event-btn" 
             onClick={() => setIsModalOpen(true)}
           >
-            ＋出費を追加
+            ＋
+            <span className="hide-mobile">出費を追加</span>
           </button>
         </div>
       </div>
@@ -159,6 +160,7 @@ function Event() {
             return handleAdd(data);            
           }}
           initialData={false}
+          initialCarrency={events.currency}
         />
       </Modal>
       

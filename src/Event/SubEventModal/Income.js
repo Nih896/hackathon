@@ -9,10 +9,13 @@ function Income({ subevent }) {
         収入
       </h2>
       <div className="Modal-costbox">
-        <span className="Modal-text">{(() => {
-          const receiver = subevent.members?.find(m => m.id === subevent.receiverId);
-          return receiver ? receiver.name : subevent.receiverId; 
-        })()}</span>
+        <span className="Modal-text">
+          {
+            subevent.members.find(
+              (member) => String(member.id) === String(subevent.receiverId)
+            )?.name || "不明"
+          }
+        </span>
         <p className="Modal-cost">{subevent.amount}{CURRENCIES[subevent.currency].symbol}</p>
       </div >
 

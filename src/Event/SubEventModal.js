@@ -15,7 +15,7 @@ import Modal from "../components/Modal";
 import SubmitModal from "./SubEventModal/SubmitModal";
 import db from "../firebase";
 
-function SubEventModal({ subevent, eventId, onClose, onPrev, onNext }) {
+function SubEventModal({ subevent, eventId, events, onClose, onPrev, onNext }) {
 
   const [editing, setEditing] = useState(null);//サブイベントの情報
 
@@ -74,7 +74,7 @@ function SubEventModal({ subevent, eventId, onClose, onPrev, onNext }) {
         </div>
 
         {/* ここで type に応じてコンポーネントをレンダリング */}
-        <ContentComponent subevent={subevent} />
+        <ContentComponent subevent={subevent} events={events} />
         
         <div className="Datemodal-btn">
           <button 

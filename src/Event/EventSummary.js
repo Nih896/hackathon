@@ -18,7 +18,7 @@ function EventSummary({ id, events }) {
 
     const unsubscribe = onSnapshot(subColRef, async () => {
       // SubEvents が変化するたびに getSettlement を呼んで再計算
-      const currencyTotals = await addgetSettlement(id);
+      const currencyTotals = await addgetSettlement(id, events);
       setSettlements(currencyTotals);
     });
 

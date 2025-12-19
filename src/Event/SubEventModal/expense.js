@@ -10,7 +10,11 @@ function expense({ subevent }) {
       </h2>
       <div className="Modal-costbox">
         <span className="Modal-text">
-          {subevent.payerName}
+          {
+            subevent.members.find(
+              (member) => String(member.id) === String(subevent.payerId)
+            )?.name || "不明"
+          }
         </span>
         <p className="Modal-cost">{subevent.amount}{CURRENCIES[subevent.currency].symbol}</p>
       </div>

@@ -46,14 +46,37 @@ function EventDetail({ id, events }) {
 
   //サブイベントのメッセージ
   function renderSubEvent(se) {
-    const receiver = se.members.find(m => m.id === se.receiverId);
     switch (se?.type) {
       case "expense":
-        return <span className="Detail-message">{se.payerName}が支払い</span>;
+        return <span className="Detail-message">
+          {
+            se.members.find(
+              (member) => String(member.id) === String(se.payerId)
+            )?.name || "不明"
+          }が支払い
+        </span>;
       case "income":
-        return <span className="Detail-message">{receiver ? receiver.name : "不明"}が受け取り</span>;
+        return <span className="Detail-message">
+          {
+            se.members.find(
+              (member) => String(member.id) === String(se.receiverId)
+            )?.name || "不明"
+          }が受け取り
+        </span>;
       case "payment":
-        return <span className="Detail-message">{se.payerName}が{receiver ? receiver.name : "不明"}に支払い</span>;
+        return <span className="Detail-message">
+          {
+            events.members.find(
+              (members) => String(members.id) === String(se.payerId)
+            )?.name || "不明"
+          }
+          が
+          {
+            events.members.find(
+              (members) => String(members.id) === String(se.receiverId)
+            )?.name || "不明"
+          }に支払い
+        </span>;
       default:
         return <span className="Detail-message">その他：{se.title}</span>;
     }
@@ -182,6 +205,7 @@ const handleNext = () => handleMove("next");
       {isModalOpen && subevents[datetime] && (
         <SubEventModal
           subevent={subevents[datetime][currentIndex]}
+          events={events}
           eventId={id}
           onClose={handleCloseModal}
           onPrev={handlePrev}
