@@ -1,0 +1,118 @@
+.Event-main {
+  padding-left: 20px;
+  padding-right: 20px;
+  min-height: 100vh;
+  height: auto
+}
+
+.Event-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 20px;
+  padding-bottom: 10px;
+}
+
+.Event-title {
+  display: flex;
+  align-items: center;
+  cursor:default;
+}
+
+.Event-emoji {
+  font-size: 24px;
+  margin: 0;
+  padding-right: 5px;
+}
+
+.Event-h1 {
+  margin: 0;
+  padding: 0;
+  font-size: 28px;
+}
+
+.Event-btns {
+  display: flex;
+  align-items: center;
+}
+
+.Event-Iconbtn {
+  background: transparent;
+  border: none;
+  padding: 0 10px 0 0;
+  margin: 0;
+  cursor: pointer;
+}
+
+.Event-logo-Edit {
+  height: 40px;
+  width: 40px;
+  content: url("../img/Edit_Icon.svg");
+}
+.Event-logo-Edit:hover {
+  content: url("../img/Edit_Active.svg");
+}
+
+.Event-logo-Share {
+  height: 40px;
+  width: 40px;
+  content: url("../img/Share_Icon.svg");
+}
+.Event-logo-Share:hover {
+  content: url("../img/Share_Active.svg");
+}
+
+.Event-btn {
+  border-radius:10px;
+  background: #60C8FF;
+  border: none;
+  color: #FFFFFF;
+  font-size: 14px;
+  padding: 8px 12px;
+  margin: 0;
+  cursor: pointer;
+}
+
+.modal-boder {
+  height: 1px;
+  background-color: #97B1CC;
+  border: none;
+}
+
+.Event-detail-summary {
+  border: none; 
+  background: #F6FBFF;
+  border-radius:10px;
+  padding: 5px 8px;
+  margin-top: 10px;
+  margin-bottom: 40px;
+  width: 280px;
+}
+
+.Event-summary-btn {
+  color: #000; 
+  background: #F6FBFF;
+  border-radius:10px;
+  border: none;
+  font-size: 14px;
+  padding: 8px 40px;
+  margin: 0px 0px 0px 10px;
+  cursor: pointer;
+}
+.Event-summary-btn.active {
+  background: #E5ECF4;
+}
+
+.Event-detail-btn {
+  color: #000; 
+  background: #F6FBFF;
+  border-radius:10px;
+  border: none;
+  font-size: 14px;
+  padding: 8px 50px;
+  margin: 0px 0px 0px 10px;
+  cursor: pointer;
+}
+.Event-detail-btn.active {
+  background: #E5ECF4;
+}

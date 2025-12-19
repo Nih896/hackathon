@@ -3,11 +3,12 @@
 import './App.css';
 import Header from "./Header";
 import { Routes, Route, Link } from 'react-router-dom';
-import Event from './Event';
-import EventCreatePage from './EventCreatePage';
+import Event from './Event/Event';
+import EventCreatePage from './/EventCreatePage/EventCreatePage';
 import SubEventFormPage from './pages/SubEventFormPage';
-import EventEditPage from './EventEditPage';
+import EventEditPage from './Event/EventEditPage';//change
 import SubEvent from './pages/SubEvent';
+import FirstPage from './FirstPage';
 
 //import db from "./firebase";
 //import { doc, collection, getDocs, onSnapshot, addDoc } from "firebase/firestore"; 
@@ -30,6 +31,7 @@ function App() {
           <Route path="/subevent/:eventId" element={<SubEvent />} />
           <Route path="/subevent" element={<SubEventFormPage />} />
           <Route path="/event/:id/edit" element={<EventEditPage />} />
+          <Route path="/FirstPage" element={<FirstPage />} />
         </Routes>
       </div>
     </div>

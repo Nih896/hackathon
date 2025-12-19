@@ -1,0 +1,115 @@
+.Summary-flex {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start; /* 子要素の高さを揃えない */
+}
+
+/* スマホ向けのスタイル（画面幅が768px以下のとき） */
+@media screen and (max-width: 480px) {
+  .Summary-flex {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+.Summary-box {
+  border: #97B1CC solid 1px; /*境界線の指定*/
+  background: #FFFFFF;
+  border-radius:10px;
+  padding: 10px 20px 25px 20px;
+  width: 40%;
+}
+
+@media screen and (max-width: 480px) {
+  .Summary-box {
+    width: 100%; /* スマホでは横幅いっぱいにする */
+    box-sizing: border-box; /* 枠線や余白が幅からはみ出すのを防ぐ */
+    margin-bottom: 10px;
+  }
+}
+
+.Summary-h2-seisan {
+  margin: 0;
+  padding-bottom: 5px;
+  font-size: 20px;
+  cursor: default;
+}
+
+.Summary-h2-kasikari {
+  margin: 0;
+  padding-bottom: 22px;
+  font-size: 20px;
+  cursor: default;
+}
+
+.Summary-card {
+  border: none;
+  border-radius: 10px;
+  padding: 20px 5px;
+  margin: 10px 0;
+  background: #F4F9FF;
+}
+
+/*精算*/
+.Summary-h3 {
+  margin: 0;
+  font-size: 15px;
+  padding-bottom: 8px;
+  font-weight: normal;
+  color: #8491AC;
+  cursor: default;
+}
+
+.Summary-nonedata {
+    font-size: 22px;
+    color: #778396;
+    margin: 0;
+    padding-bottom: 10px;
+    cursor: default;
+}
+
+.Summary-currency {
+  text-transform: uppercase;
+  padding-top: 10px;
+  margin: 0;
+}
+
+.Summary-member {
+  margin: 0;
+  text-align: center;
+  letter-spacing:2px
+}
+
+/*貸し借り*/
+.Summary-members {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 12px;
+  padding-left: 5px;
+  padding-right: 5px;
+  font-size: 16px;
+  cursor: default;
+}
+
+.Summary-boder {
+  height: 1.5px;
+  background-color: #97B1CC;
+  border: none;
+}
+
+.Summary-simbol {
+  color: #778396;
+}
+
+.amount.positive {
+  color: #6FD434;   /* プラス → 緑 */
+}
+
+.amount.negative {
+  color: #FF3C3C;     /* マイナス → 赤 */
+}
+
+.amount.zero {
+  color: gray;    /* ゼロ → グレー */
+}
