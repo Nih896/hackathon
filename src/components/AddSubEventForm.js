@@ -268,7 +268,7 @@ export default function AddSubEventForm({ members, onAdd, isOpen, onClose, initi
   
   setErrorMessage("");
 
-  const eventMembersData = [];
+  let eventMembersData = [];
   if (activeTab === "payment") {
   // 支払いの場合は、負担者リスト（members）は空にする
   eventMembersData = []; 
