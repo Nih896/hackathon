@@ -1,6 +1,7 @@
 .Event-main {
   padding-left: 20px;
   padding-right: 20px;
+  padding-bottom: 20px;
   min-height: 100vh;
   height: auto
 }
