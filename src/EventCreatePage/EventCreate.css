@@ -40,6 +40,11 @@
   cursor:default;
   margin: 0;
 }
+@media screen and (max-width: 480px) {
+  .EventCreate-error {
+    font-size: 14px;
+  }
+}
 
 .EventCreate-input {
   border-radius:10px;
@@ -129,7 +134,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 8px 15px;
+  padding: 0px 5px;
   border-bottom: 1px solid #97B1CC; /* 区切り線 */
   font-size: 14px;
 }
@@ -150,18 +155,14 @@
 .member-input {
   border: none;
   background: transparent;
-  padding: 10px 15px;
-  color: #15ADFF;
+  padding: 10px 10px;
+  color: #000;
   font-size: 14px;
   width: 100%;
 }
 .member-input:focus {
   outline: none;
   border: none;
-}
-
-.member-top-row {
-  border-top: 1px solid #97B1CC;
 }
 
 .member-addbtn {

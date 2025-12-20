@@ -160,7 +160,7 @@ function Event() {
             return handleAdd(data);            
           }}
           initialData={false}
-          initialCarrency={events.currency}
+          initialCurrency={events.currency}
         />
       </Modal>
       

@@ -77,37 +77,33 @@ function CurrencyModal({ onClose, currency }) {
 
           <hr className="modal-boder"/>
 
-          <span className="modal-expect">提案</span>
-
           {/* 提案リスト */}
-          <ul className="modal-list">
-            {searchTerm.trim() === "" ? (
-              // 検索欄が空のとき → 何も表示しない
-              <div className="modal-none"></div>
-            ) : filteredCurrencies.length === 0 ? (
-              // ヒットが0件のとき → 何も表示しない
-              <div className="modal-none"></div>
-            ) : (
-              filteredCurrencies.map((option, index) => (                
-                <li
-                  key={option.country.en}
-                  className={`modal-item ${index === filteredCurrencies.length - 1 ? "last-item" : ""}`}
-                  onClick={() => {
-                  currency(option.code);
-                  onClose();
-                  }}
-                >
-                  <div className="modal-country">
-                    <div className="modal-flag">{option.flag}</div> {option.country.jp}
-                  </div>
-                  <div className="modal-currency">
-                    <div className="modal-upper">{option.code}</div>
-                      ({option.symbol})
-                  </div>             
-                </li>
-              ))
-            )}
-          </ul>
+          {searchTerm.trim() !== "" && filteredCurrencies.length > 0 && (
+            <>
+              <span className="modal-expect">提案</span>
+
+              <ul className="modal-list">
+                {filteredCurrencies.map((option, index) => (                
+                  <li
+                    key={option.country.en}
+                    className={`modal-item ${index === filteredCurrencies.length - 1 ? "last-item" : ""}`}
+                    onClick={() => {
+                    currency(option.code);
+                    onClose();
+                    }}
+                  >
+                    <div className="modal-country">
+                      <div className="modal-flag">{option.flag}</div> {option.country.jp}
+                    </div>
+                    <div className="modal-currency">
+                      <div className="modal-upper">{option.code}</div>
+                        ({option.symbol})
+                    </div>             
+                  </li>
+                ))}
+              </ul>
+            </>
+          )}
 
           {/* 国リスト */}
           <div>

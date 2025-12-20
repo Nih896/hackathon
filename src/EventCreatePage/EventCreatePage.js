@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import Select from 'react-select';
 import db from "../firebase";
-import { collection, addDoc, serverTimestamp } from "firebase/firestore"
+import { collection, addDoc, serverTimestamp, count } from "firebase/firestore"
 import EmojiPicker from 'emoji-picker-react';
 import './EventCreate.css';
 import CurrencyModal from "./CurrencyModal";
@@ -91,8 +91,7 @@ function EventCreatePage({currency}) {
     const [emoji, setEmoji] = useState("😊") //絵文字
     const [title, setTitle] = useState(""); // イベント名
     const [memorycurrency, setMemoryCurrency] = useState(options[0]); // 単位（デフォルト日本円)
-    const [members, setMembers] = useState([]); // 参加者
-    const [memberName, setMemberName] = useState(""); // 入力中の名前
+    const [members, setMembers] = useState([{ id: Date.now(), name: "" }]); // 参加者
 
     const [showEmojiPicker, setShowEmojiPicker] = useState(false); //絵文字バーの非表示
     const [errormessege, setErrormessege] = useState(""); //エラーメッセージの非表示
@@ -151,17 +150,21 @@ function EventCreatePage({currency}) {
         setMembers(members.filter((m) => m.id !== id));
     };
 
+    //参加者名の更新関数
+    const updateMemberName = (id, newName) => {
+        setMembers(members.map((m) =>
+            (m.id === id ? { ...m, name: newName } : m)
+        ));
+    };
+
     //参加者の追加関数
     const addMember = () => {
-        if (memberName.trim() === "") return;
-
         const newMember = {
             id: Date.now(),     // 一意なID（タイムスタンプを使う）
-            name: memberName,   // 入力された名前
+            name: "",   // 最初は空欄
         };
 
         setMembers([...members, newMember]); // 配列に追加
-        setMemberName(""); // 入力欄をリセット
     };
 
     // Firestoreにデータを書き込む関数
@@ -170,11 +173,14 @@ function EventCreatePage({currency}) {
             setErrormessege("イベント名を入力してください");
             return;
         }
+
+        const validMembers = members.filter(m => m.name && m.name.trim() !== "");
+
         const docRef = await addDoc(collection(db, "events"), {
             emoji: emoji,
             title: title,
             currency: memorycurrency.value,
-            members: members, // [{id: 1, name: "太郎"}, ...] の形で保存
+            members: validMembers, // [{id: 1, name: "太郎"}, ...] の形で保存
             createdAt: serverTimestamp()
         });
         // 保存後、詳細ページに遷移
@@ -269,7 +275,13 @@ function EventCreatePage({currency}) {
                 <ul className="member-list">
                     {members.map((m) => (
                         <li key={m.id} className="member-item">
-                            <span className='member-name'>{m.name}</span>
+                            <input 
+                                className='member-input'
+                                type="text"
+                                value={m.name}
+                                onChange={(e) => updateMemberName(m.id, e.target.value)}
+                                placeholder="参加者名"
+                            />
                             <button
                                 className="remove-btn"
                                 onClick={() => removeMember(m.id)}
@@ -278,19 +290,10 @@ function EventCreatePage({currency}) {
                             </button>
                         </li>
                     ))}
-                </ul>         
+                </ul>       
+                                
+                <button className = "member-addbtn" onClick={addMember}>参加者を追加</button>
                 
-                <input 
-                    className='member-input'
-                    type="text"
-                    value={memberName}
-                    onChange={(e) => setMemberName(e.target.value)}
-                    placeholder="参加者名"
-                />
-
-                <div className="member-top-row">
-                    <button className = "member-addbtn" onClick={addMember}>参加者を追加</button>
-                </div>
             </div>
 
             <div className="EventCreate-btn-right">

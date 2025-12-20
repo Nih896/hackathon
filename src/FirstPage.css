@@ -19,6 +19,11 @@
   color: #778396;
   cursor:default;
 }
+@media screen and (max-width: 480px) {
+  .FirstPage-h2 {
+    font-size: 14px;
+  }
+}
 
 .FirstPage-ul {
   list-style: none;
