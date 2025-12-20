@@ -5,9 +5,7 @@ import Header from "./Header";
 import { Routes, Route, Link } from 'react-router-dom';
 import Event from './Event/Event';
 import EventCreatePage from './/EventCreatePage/EventCreatePage';
-import SubEventFormPage from './pages/SubEventFormPage';
-import EventEditPage from './Event/EventEditPage';//change
-import SubEvent from './pages/SubEvent';
+import EventEditPage from './Event/EventEditPage';
 import FirstPage from './FirstPage';
 
 //import db from "./firebase";
@@ -28,8 +26,6 @@ function App() {
         <Routes>
           <Route path="/EventCreatePage" element={<EventCreatePage />} />
           <Route path="/event/:id" element={<Event />} />
-          <Route path="/subevent/:eventId" element={<SubEvent />} />
-          <Route path="/subevent" element={<SubEventFormPage />} />
           <Route path="/event/:id/edit" element={<EventEditPage />} />
           <Route path="/FirstPage" element={<FirstPage />} />
         </Routes>
@@ -37,7 +33,6 @@ function App() {
     </div>
   );
 
-  //***************************************************************** */
   
 }
 

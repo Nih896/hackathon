@@ -3,6 +3,7 @@ import EmojiPicker from 'emoji-picker-react';
 import './AddSubEventForm.css';
 //import Modal from "./Modal";
 
+// 通貨一覧
 const CURRENCIES = {
   jpy: { symbol: "¥", name: "日本円", flag: "🇯🇵" },
   usd: { symbol: "$", name: "米ドル", flag: "🇺🇸" },
@@ -40,7 +41,7 @@ const CURRENCIES = {
   zar: { symbol: "R", name: "南アフリカランド", flag: "🇿🇦" },
 };
 
-export default function AddSubEventForm({ members, onAdd, isOpen, onClose, initialData, initialCurrency }) {
+export default function AddSubEventForm({ members, onAdd, initialData, initialCurrency }) {
   const [activeTab, setActiveTab] = useState(initialData?.type || "expense");
   const [splitMethod, setSplitMethod] = useState(initialData?.splitMethod || "equal");
   const [title, setTitle] = useState(initialData?.title || "");
@@ -217,6 +218,7 @@ export default function AddSubEventForm({ members, onAdd, isOpen, onClose, initi
     );
   };
 
+  // 電卓
   const handleCalcButton = (id, op) => {
     const value = prompt("値を入力してください:");
     if (value === null || value.trim() === "") return;
@@ -245,6 +247,7 @@ export default function AddSubEventForm({ members, onAdd, isOpen, onClose, initi
     }
   };
 
+  // エラー
   const handleSubmit = (e) => {
   e.preventDefault();
 
@@ -260,7 +263,6 @@ export default function AddSubEventForm({ members, onAdd, isOpen, onClose, initi
     return;
   }
   
-  // バリデーションチェック
   if (!title.trim() || !amount || parseFloat(amount) <= 0) {
       alert("タイトルと金額を正しく入力してください。");
       return;
@@ -321,7 +323,7 @@ export default function AddSubEventForm({ members, onAdd, isOpen, onClose, initi
   onAdd(eventData);
 };
 
-
+  // 単位！
   const totalRatio = selectedMembers.filter(m => m.selected).reduce((sum, m) => sum + m.ratio, 0);
 
   const renderInputStyle = (isFocused) => ({
@@ -332,6 +334,8 @@ export default function AddSubEventForm({ members, onAdd, isOpen, onClose, initi
     transition: "border-color 0.2s ease-in-out",
     outline: "none",
   });
+
+  const currentSymbol = CURRENCIES[currency]?.symbol || "¥";
 
   return (
     // <Modal isOpen={isOpen} onClose={onClose}>
@@ -757,7 +761,7 @@ export default function AddSubEventForm({ members, onAdd, isOpen, onClose, initi
 
                     {splitMethod === "equal" && (
                       <span style={{ fontSize: "1.2em",color: "#15ADFF", fontWeight: "bold" }}>
-                        {m.selected ? `${m.customAmount}¥` : "0¥"}
+                        {m.selected ? `${currentSymbol}${m.customAmount}` : `${currentSymbol}0`}
                       </span>
                     )}
 
@@ -770,7 +774,7 @@ export default function AddSubEventForm({ members, onAdd, isOpen, onClose, initi
                         }}
                       >
                         <span style={{ fontSize: "1.1em", color: "#15ADFF",fontWeight: "bold" }}>
-                          {m.selected ? `${Math.floor(Number(amount) * (m.ratio / totalRatio) || 0)}¥` : "0¥"}
+                          {m.selected ? `${currentSymbol}${Math.floor(Number(amount) * (m.ratio / totalRatio) || 0)}` : `${currentSymbol}0`}
                         </span>
                         {/*<div style={{ display: "flex", border: "1px solid #ddd", borderRadius: "8px", overflow: "hidden", alignItems: "center" }}>
                         */}
@@ -816,6 +820,10 @@ export default function AddSubEventForm({ members, onAdd, isOpen, onClose, initi
 
                     {splitMethod === "custom" && (
                       <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                        <span style={{ fontWeight: "bold", color: "#15ADFF", fontSize: "1.1em" }}>
+                          {currentSymbol}
+                        </span>
+                        
                         <input
                           type="number"
                           value={editedAmounts[m.id] !== undefined ? editedAmounts[m.id] : m.customAmount}
@@ -826,13 +834,13 @@ export default function AddSubEventForm({ members, onAdd, isOpen, onClose, initi
                           style={{
                             width: "80px",
                             textAlign: "right",
-                            padding: "8px 8px",
+                            padding: "8px",
                             background: "#DBE5F2",
                             borderRadius: "4px",
-                            transition: "border-color 0.2s ease-in-out",
                             border: "none",
                           }}
                         />
+
                         <div style={{ display: "flex", gap: "4px" }}>
                           <button type="button" 
                           style={{
