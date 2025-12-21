@@ -2,6 +2,7 @@
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import { getFirestore } from "firebase/firestore";
+import { getAuth, signInAnonymously } from "firebase/auth";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -21,6 +22,16 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 export const db = getFirestore(app);
+const auth = getAuth(app);
+
+// アプリ起動時に匿名ログインを実行
+signInAnonymously(auth)
+  .then(() => {
+    console.log("匿名認証に成功しました！");
+  })
+  .catch((error) => {
+    console.error("匿名認証エラー:", error);
+  });
 
 const appSubEvent = initializeApp(firebaseConfig, "eventApp"); // 名前付きアプリで区別
 export const SubEventDb = getFirestore(appSubEvent);
