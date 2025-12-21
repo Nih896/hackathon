@@ -2,7 +2,7 @@
 
 import './App.css';
 import Header from "./Header";
-import { Routes, Route, Link } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import Event from './Event/Event';
 import EventCreatePage from './/EventCreatePage/EventCreatePage';
 import EventEditPage from './Event/EventEditPage';
@@ -24,6 +24,7 @@ function App() {
       <Header />
       <div>
         <Routes>
+          <Route path="/" element={<Navigate to="/EventCreatePage" replace />} />
           <Route path="/EventCreatePage" element={<EventCreatePage />} />
           <Route path="/event/:id" element={<Event />} />
           <Route path="/event/:id/edit" element={<EventEditPage />} />
